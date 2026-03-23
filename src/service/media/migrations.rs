@@ -20,6 +20,7 @@ use crate::Services;
 /// again.
 pub(crate) async fn migrate_sha256_media(services: &Services) -> Result<()> {
 	let db = &services.db;
+	#[cfg_attr(not(unix), allow(unused))]
 	let config = &services.server.config;
 
 	warn!("Migrating legacy base64 file names to sha256 file names");

@@ -43,8 +43,7 @@ pub enum ServerCommand {
 	#[clap(alias = "reload")]
 	ReloadMods,
 
-	#[cfg(unix)]
-	/// Restart the server
+	/// Restart the server (Unix only)
 	Restart {
 		#[arg(short, long)]
 		force: bool,

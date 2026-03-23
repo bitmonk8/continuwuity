@@ -128,20 +128,28 @@ pub(super) async fn reload_mods(&self) -> Result {
 }
 
 #[admin_command]
-#[cfg(unix)]
 pub(super) async fn restart(&self, force: bool) -> Result {
-	use conduwuit::utils::sys::current_exe_deleted;
-
-	if !force && current_exe_deleted() {
-		return Err!(
-			"The server cannot be restarted because the executable changed. If this is expected \
-			 use --force to override."
-		);
+	#[cfg(not(unix))]
+	{
+		let _ = force;
+		return Err!("Restart is not supported on this platform. Please restart the server manually.");
 	}
 
-	self.services.server.restart()?;
+	#[cfg(unix)]
+	{
+		use conduwuit::utils::sys::current_exe_deleted;
 
-	self.write_str("Restarting server...").await
+		if !force && current_exe_deleted() {
+			return Err!(
+				"The server cannot be restarted because the executable changed. If this is expected \
+				 use --force to override."
+			);
+		}
+
+		self.services.server.restart()?;
+
+		self.write_str("Restarting server...").await
+	}
 }
 
 #[admin_command]
