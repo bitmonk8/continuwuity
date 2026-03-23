@@ -31,8 +31,7 @@ pub(super) fn restart() -> ! {
 #[cfg(not(unix))]
 #[cold]
 pub(super) fn restart() -> ! {
-	conduwuit_core::error!(
+	panic!(
 		"Automatic restart is not available on this platform. Please restart the server manually."
 	);
-	std::process::exit(1);
 }
