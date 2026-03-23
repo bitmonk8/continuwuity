@@ -5,6 +5,7 @@ on:
     branches: [main, xplatform]
   pull_request:
     branches: [main, xplatform]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
