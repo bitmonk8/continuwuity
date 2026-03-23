@@ -131,8 +131,8 @@ pub(super) async fn reload_mods(&self) -> Result {
 pub(super) async fn restart(&self, force: bool) -> Result {
 	#[cfg(not(unix))]
 	{
-		let _ = force;
-		return Err!("Restart is not supported on this platform. Please restart the server manually.");
+		_ = force;
+		Err!("Restart is not supported on this platform. Please restart the server manually.")
 	}
 
 	#[cfg(unix)]
