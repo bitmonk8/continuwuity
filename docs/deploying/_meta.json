@@ -38,5 +38,15 @@
         "type": "file",
         "name": "freebsd",
         "label": "FreeBSD"
+    },
+    {
+        "type": "file",
+        "name": "macos",
+        "label": "macOS"
+    },
+    {
+        "type": "file",
+        "name": "windows",
+        "label": "Windows"
     }
 ]

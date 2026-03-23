@@ -28,6 +28,11 @@ pub fn maximize_fd_limit() -> Result<(), nix::errno::Errno> {
 	Ok(())
 }
 
+/// No-op on non-Unix platforms where file descriptor limits are managed by
+/// the OS differently.
+#[cfg(not(unix))]
+pub fn maximize_fd_limit() -> Result<()> { Ok(()) }
+
 /// Return a possibly corrected std::env::current_exe() even if the path is
 /// marked deleted.
 ///

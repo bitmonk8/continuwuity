@@ -47,14 +47,12 @@ pub(super) async fn signal(server: Arc<Server>) {
 #[cfg(not(unix))]
 #[tracing::instrument(skip_all, level = "info")]
 pub(super) async fn signal(server: Arc<Server>) {
-	loop {
-		tokio::select! {
-			_ = signal::ctrl_c() => {
-				warn!("Received Ctrl+C");
-				if let Err(e) = server.server.signal.send("SIGINT") {
-					debug_error!("signal channel: {e}");
-				}
-			},
-		}
+	if let Err(e) = signal::ctrl_c().await {
+		warn!("Failed to listen for Ctrl+C: {e}");
+		return;
+	}
+	warn!("Received Ctrl+C");
+	if let Err(e) = server.server.shutdown() {
+		debug_error!("shutdown: {e}");
 	}
 }

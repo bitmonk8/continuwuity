@@ -52,7 +52,6 @@ impl Server {
 		#[cfg(feature = "sentry_telemetry")]
 		let sentry_guard = crate::sentry::init(&config);
 
-		#[cfg(unix)]
 		sys::maximize_fd_limit()
 			.expect("Unable to increase maximum soft and hard file descriptor limit");
 

@@ -1,5 +1,3 @@
-#![cfg(unix)]
-
 use std::{
 	net::{self, IpAddr, Ipv4Addr},
 	os::fd::AsRawFd,

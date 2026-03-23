@@ -1,6 +1,7 @@
 mod plain;
 #[cfg(feature = "direct_tls")]
 mod tls;
+#[cfg(unix)]
 mod unix;
 
 use std::sync::Arc;
@@ -29,9 +30,12 @@ pub(super) async fn serve(
 
 	let addrs = config.get_bind_addrs();
 	let (app, _guard) = layers::build(&services)?;
-	if cfg!(unix) && config.unix_socket_path.is_some() {
-		unix::serve(server, app, shutdown).await
-	} else if config.tls.certs.is_some() {
+	#[cfg(unix)]
+	if config.unix_socket_path.is_some() {
+		return unix::serve(server, app, shutdown).await;
+	}
+
+	if config.tls.certs.is_some() {
 		#[cfg(feature = "direct_tls")]
 		return tls::serve(server, app, handle, addrs).await;
 

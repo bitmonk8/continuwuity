@@ -38,7 +38,6 @@ pub fn run_with_args(args: &Args) -> Result<()> {
 	runtime.block_on(async_main(&server))?;
 	runtime::shutdown(&server, runtime);
 
-	#[cfg(unix)]
 	if server.server.restarting.load(Ordering::Acquire) {
 		restart::restart();
 	}

@@ -1,0 +1,89 @@
+# macOS deployment
+
+> ### Getting help
+>
+> If you run into any problems while setting up Continuwuity, ask us in
+> `#continuwuity:continuwuity.org` or [open an issue on
+> Forgejo](https://forgejo.ellis.link/continuwuation/continuwuity/issues/new).
+
+## Prerequisites
+
+- **Xcode Command Line Tools** (provides clang and system headers):
+  ```bash
+  xcode-select --install
+  ```
+- **Rust toolchain** (stable): install via [rustup](https://rustup.rs/)
+  ```bash
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  ```
+
+No additional system packages are required. RocksDB and all other native
+dependencies are built from source by Cargo.
+
+## Building
+
+Use the `xplatform` feature set, optionally adding `jemalloc` for better
+memory allocation performance:
+
+```bash
+cargo build --release --no-default-features --features="xplatform,jemalloc"
+```
+
+The binary will be at `target/release/conduwuit`.
+
+To include the `release_max_log_level` feature for production builds:
+
+```bash
+cargo build --release --no-default-features --features="xplatform,jemalloc,release_max_log_level"
+```
+
+## Configuration
+
+Copy the example config and edit it:
+
+```bash
+cp conduwuit-example.toml continuwuity.toml
+```
+
+Key settings:
+- `server_name`: your Matrix server domain
+- `database_path`: path to the database directory (e.g. `/var/lib/continuwuity/`)
+- `address`: listen address (e.g. `["0.0.0.0"]`)
+- `port`: listen port (e.g. `[8448]`)
+
+Unix sockets are supported on macOS. Set `unix_socket_path` instead of
+`address`/`port` if desired.
+
+## Running
+
+```bash
+./target/release/conduwuit --config continuwuity.toml
+```
+
+To run as a background service, consider using `launchd` or a process
+manager like `supervisord`.
+
+## Platform-specific notes
+
+### Supported features
+
+| Feature | Status |
+|---|---|
+| TCP listener | supported |
+| Unix socket listener | supported |
+| Signal handling (graceful shutdown) | full (SIGTERM, SIGINT, SIGQUIT, SIGUSR1/2) |
+| Process restart (`exec`) | supported |
+| jemalloc | supported (add `jemalloc` feature) |
+| FD limit raising | supported |
+
+### Unavailable features
+
+The following features are Linux-only and not available on macOS:
+
+- **io_uring**: Linux kernel feature; not applicable
+- **journald**: systemd journal logging; not applicable
+- **systemd notify**: systemd integration; not applicable
+- **hardened_malloc**: Linux-only allocator
+
+These features are excluded from the `xplatform` feature set and will not
+cause build errors.

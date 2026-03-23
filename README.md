@@ -78,6 +78,23 @@ We're working our way through all of the issues in the [Forgejo project](https:/
 - [Admin API](https://forgejo.ellis.link/continuwuation/continuwuity/issues/748)
 - [Policy-list controlled moderation](https://forgejo.ellis.link/continuwuation/continuwuity/issues/750)
 
+### Platform support
+
+Continuwuity supports Linux, macOS, and Windows:
+
+| Platform | Build features | Notes |
+|---|---|---|
+| Linux | `standard` (default) | Full feature set including io_uring, jemalloc, journald, systemd |
+| macOS | `xplatform,jemalloc` | Full networking and signal handling; no io_uring/journald/systemd |
+| Windows | `xplatform` | TCP listener, Ctrl+C shutdown; no Unix sockets, signals, or jemalloc |
+
+Build with the cross-platform feature set:
+```bash
+cargo build --release --no-default-features --features="xplatform"
+```
+
+See [macOS deployment](docs/deploying/macos.mdx) and [Windows deployment](docs/deploying/windows.mdx) for detailed instructions.
+
 ### Can I migrate my data from x?
 
 - Conduwuit: Yes

@@ -918,13 +918,13 @@ pub struct Config {
 	#[serde(default)]
 	pub log_thread_ids: bool,
 
-	/// Enable journald logging on Unix platforms
+	/// Enable journald logging on Linux
 	///
 	/// When enabled, log output will be sent to the systemd journal
-	/// This is only supported on Unix platforms
+	/// This is only supported on Linux
 	///
 	/// default: false
-	#[cfg(target_family = "unix")]
+	#[cfg(target_os = "linux")]
 	#[serde(default)]
 	pub log_to_journald: bool,
 
@@ -933,7 +933,7 @@ pub struct Config {
 	/// Only used when journald logging is enabled
 	///
 	/// Defaults to the binary name
-	#[cfg(target_family = "unix")]
+	#[cfg(target_os = "linux")]
 	pub journald_identifier: Option<String>,
 
 	/// OpenID token expiration/TTL in seconds.

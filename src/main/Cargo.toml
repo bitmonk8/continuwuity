@@ -63,6 +63,19 @@ standard = [
     "otlp_telemetry",
 	"console",
 ]
+xplatform = [
+    "blurhashing",
+	"brotli_compression",
+	"element_hacks",
+	"gzip_compression",
+	"ldap",
+	"media_thumbnail",
+	"url_preview",
+	"zstd_compression",
+	"sentry_telemetry",
+	"otlp_telemetry",
+	"console",
+]
 full = [
     "standard",
     # "hardened_malloc", # Conflicts with jemalloc

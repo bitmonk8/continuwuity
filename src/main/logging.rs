@@ -53,7 +53,7 @@ pub(crate) fn init(
 
 	// If journald logging is enabled on Unix platforms, create a separate
 	// subscriber for it
-	#[cfg(all(target_family = "unix", feature = "journald"))]
+	#[cfg(all(target_os = "linux", feature = "journald"))]
 	if config.log_to_journald {
 		println!("Initialising journald logging");
 		if let Err(e) = init_journald_logging(config) {
@@ -178,7 +178,7 @@ pub(crate) fn init(
 	Ok(ret)
 }
 
-#[cfg(all(target_family = "unix", feature = "journald"))]
+#[cfg(all(target_os = "linux", feature = "journald"))]
 fn init_journald_logging(config: &Config) -> Result<()> {
 	use tracing_journald::Layer as JournaldLayer;
 

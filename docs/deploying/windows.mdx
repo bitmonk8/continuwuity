@@ -1,0 +1,104 @@
+# Windows deployment
+
+> ### Getting help
+>
+> If you run into any problems while setting up Continuwuity, ask us in
+> `#continuwuity:continuwuity.org` or [open an issue on
+> Forgejo](https://forgejo.ellis.link/continuwuation/continuwuity/issues/new).
+
+## Prerequisites
+
+- **Visual Studio Build Tools** (2019 or later) with the "Desktop
+  development with C++" workload. Download from
+  [visualstudio.microsoft.com](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+- **LLVM/Clang**: required by RocksDB's bindgen. Install via:
+  ```powershell
+  choco install llvm -y
+  ```
+  or download from [releases.llvm.org](https://releases.llvm.org/).
+  Ensure `LIBCLANG_PATH` is set if LLVM is not on your `PATH`.
+- **Rust toolchain** (stable, MSVC target): install via
+  [rustup](https://rustup.rs/)
+
+## Building
+
+Use the `xplatform` feature set (jemalloc is not available on Windows MSVC;
+the system allocator is used instead):
+
+```powershell
+cargo build --release --no-default-features --features="xplatform"
+```
+
+The binary will be at `target\release\conduwuit.exe`.
+
+To include the `release_max_log_level` feature for production builds:
+
+```powershell
+cargo build --release --no-default-features --features="xplatform,release_max_log_level"
+```
+
+### Troubleshooting build errors
+
+- **`LIBCLANG_PATH` not found**: set the environment variable to point to
+  your LLVM `bin` directory, e.g.:
+  ```powershell
+  $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
+  ```
+- **Linker errors**: ensure the Visual Studio Build Tools "Desktop
+  development with C++" workload is installed.
+
+## Configuration
+
+Copy the example config and edit it:
+
+```powershell
+copy conduwuit-example.toml continuwuity.toml
+```
+
+Key settings:
+- `server_name`: your Matrix server domain
+- `database_path`: path to the database directory (e.g. `C:\continuwuity\data\`)
+- `address`: listen address (e.g. `["0.0.0.0"]`)
+- `port`: listen port (e.g. `[8448]`)
+
+## Running
+
+```powershell
+.\target\release\conduwuit.exe --config continuwuity.toml
+```
+
+Press `Ctrl+C` to shut down the server gracefully.
+
+## Platform-specific limitations
+
+### Supported features
+
+| Feature | Status |
+|---|---|
+| TCP listener | supported |
+| Graceful shutdown | Ctrl+C only |
+| RocksDB | supported |
+| LDAP authentication | supported |
+
+### Unavailable features
+
+| Feature | Reason | Workaround |
+|---|---|---|
+| Unix socket listener | not applicable on Windows | use TCP listener |
+| SIGUSR1/2 (hot reload) | Unix signals not available | use admin room command `!server reload_config` |
+| Process restart (`exec`) | POSIX exec not available | restart the server manually |
+| jemalloc | not compatible with MSVC | system allocator is used |
+| io_uring | Linux kernel feature | not applicable |
+| journald | systemd feature | not applicable |
+| systemd notify | systemd feature | not applicable |
+| hardened_malloc | Linux-only | not applicable |
+| FD limit raising | not applicable on Windows | Windows handles limits differently |
+
+### Running as a Windows service
+
+Native Windows Service (SCM) integration is not yet implemented. To run
+Continuwuity as a background service, consider using:
+
+- [NSSM](https://nssm.cc/) (Non-Sucking Service Manager)
+- [WinSW](https://github.com/winsw/winsw)
+- Task Scheduler with "Run whether user is logged on or not"

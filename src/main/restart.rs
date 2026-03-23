@@ -1,9 +1,10 @@
-#![cfg(unix)]
-
+#[cfg(unix)]
 use std::{env, os::unix::process::CommandExt, process::Command};
 
+#[cfg(unix)]
 use conduwuit_core::{debug, info, utils};
 
+#[cfg(unix)]
 #[cold]
 pub(super) fn restart() -> ! {
 	// SAFETY: We have allowed an override for the case where the current_exe() has
@@ -25,4 +26,13 @@ pub(super) fn restart() -> ! {
 
 	let error = Command::new(exe).args(args).envs(envs).exec();
 	panic!("{error:?}");
+}
+
+#[cfg(not(unix))]
+#[cold]
+pub(super) fn restart() -> ! {
+	conduwuit_core::error!(
+		"Automatic restart is not available on this platform. Please restart the server manually."
+	);
+	std::process::exit(1);
 }
