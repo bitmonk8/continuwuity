@@ -80,7 +80,7 @@ mod platform {
 	}
 
 	/// Get the name of the block device on which Path is mounted.
-	pub fn name_from_path(path: &Path) -> crate::Result<String> {
+	pub fn name_from_path(path: &Path) -> Result<String> {
 		use std::io::{Error, ErrorKind::NotFound};
 
 		let (major, minor) = dev_from_path(path)?;
@@ -98,7 +98,7 @@ mod platform {
 
 	/// Get the (major, minor) of the block device on which Path is mounted.
 	#[allow(clippy::useless_conversion, clippy::unnecessary_fallible_conversions)]
-	fn dev_from_path(path: &Path) -> crate::Result<(dev_t, dev_t)> {
+	fn dev_from_path(path: &Path) -> Result<(dev_t, dev_t)> {
 		use std::os::unix::fs::MetadataExt;
 
 		let stat = fs::metadata(path)?;

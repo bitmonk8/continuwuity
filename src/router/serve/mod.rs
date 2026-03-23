@@ -44,7 +44,7 @@ pub(super) async fn serve(
 			"tls",
 			"conduwuit was not built with direct TLS support (\"direct_tls\")"
 		));
-	} else {
-		plain::serve(server, app, handle, addrs).await
 	}
+
+	plain::serve(server, app, handle, addrs).await
 }
