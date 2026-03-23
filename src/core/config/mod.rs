@@ -924,7 +924,7 @@ pub struct Config {
 	/// This is only supported on Linux
 	///
 	/// default: false
-	#[cfg(target_os = "linux")]
+	#[cfg(all(target_os = "linux", feature = "journald"))]
 	#[serde(default)]
 	pub log_to_journald: bool,
 
@@ -933,7 +933,7 @@ pub struct Config {
 	/// Only used when journald logging is enabled
 	///
 	/// Defaults to the binary name
-	#[cfg(target_os = "linux")]
+	#[cfg(all(target_os = "linux", feature = "journald"))]
 	pub journald_identifier: Option<String>,
 
 	/// OpenID token expiration/TTL in seconds.

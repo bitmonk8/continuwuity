@@ -39,9 +39,23 @@ jobs:
           key: ${{ runner.os }}-cargo-check-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-check-
 
+      - name: Install LLVM (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y libclang-dev
+
+      - name: Install LLVM (macOS)
+        if: runner.os == 'macOS'
+        run: brew install llvm
+
       - name: Install LLVM (Windows)
         if: runner.os == 'Windows'
         run: choco install llvm -y
+
+      - name: Set LLVM paths (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          echo "LLVM_CONFIG_PATH=$(brew --prefix llvm)/bin/llvm-config" >> $GITHUB_ENV
+          echo "LIBCLANG_PATH=$(brew --prefix llvm)/lib" >> $GITHUB_ENV
 
       - name: cargo check
         run: cargo check --no-default-features --features="${{ matrix.features }}"
@@ -74,9 +88,23 @@ jobs:
           key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-test-
 
+      - name: Install LLVM (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y libclang-dev
+
+      - name: Install LLVM (macOS)
+        if: runner.os == 'macOS'
+        run: brew install llvm
+
       - name: Install LLVM (Windows)
         if: runner.os == 'Windows'
         run: choco install llvm -y
+
+      - name: Set LLVM paths (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          echo "LLVM_CONFIG_PATH=$(brew --prefix llvm)/bin/llvm-config" >> $GITHUB_ENV
+          echo "LIBCLANG_PATH=$(brew --prefix llvm)/lib" >> $GITHUB_ENV
 
       - name: cargo test
         run: cargo test --no-default-features --features="${{ matrix.features }}"
@@ -111,9 +139,23 @@ jobs:
           key: ${{ runner.os }}-cargo-clippy-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-clippy-
 
+      - name: Install LLVM (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y libclang-dev
+
+      - name: Install LLVM (macOS)
+        if: runner.os == 'macOS'
+        run: brew install llvm
+
       - name: Install LLVM (Windows)
         if: runner.os == 'Windows'
         run: choco install llvm -y
+
+      - name: Set LLVM paths (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          echo "LLVM_CONFIG_PATH=$(brew --prefix llvm)/bin/llvm-config" >> $GITHUB_ENV
+          echo "LIBCLANG_PATH=$(brew --prefix llvm)/lib" >> $GITHUB_ENV
 
       - name: cargo clippy
         run: cargo clippy --no-default-features --features="${{ matrix.features }}" -- -D warnings

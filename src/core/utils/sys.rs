@@ -5,7 +5,9 @@ use std::path::PathBuf;
 
 pub use compute::available_parallelism;
 
-use crate::{Result, debug};
+use crate::Result;
+#[cfg(unix)]
+use crate::debug;
 
 /// This is needed for opening lots of file descriptors, which tends to
 /// happen more often when using RocksDB and making lots of federation
