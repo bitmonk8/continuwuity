@@ -28,6 +28,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
 
       - name: Cache cargo registry and build
         uses: actions/cache@v4
@@ -39,9 +41,9 @@ jobs:
           key: ${{ runner.os }}-cargo-check-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-check-
 
-      - name: Install LLVM (Ubuntu)
+      - name: Install system deps (Ubuntu)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y libclang-dev
+        run: sudo apt-get install -y libclang-dev liburing-dev
 
       - name: Install LLVM (macOS)
         if: runner.os == 'macOS'
@@ -77,6 +79,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
 
       - name: Cache cargo registry and build
         uses: actions/cache@v4
@@ -88,9 +92,9 @@ jobs:
           key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-test-
 
-      - name: Install LLVM (Ubuntu)
+      - name: Install system deps (Ubuntu)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y libclang-dev
+        run: sudo apt-get install -y libclang-dev liburing-dev
 
       - name: Install LLVM (macOS)
         if: runner.os == 'macOS'
@@ -127,7 +131,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          components: clippy
+          components: clippy, rustfmt
 
       - name: Cache cargo registry and build
         uses: actions/cache@v4
@@ -139,9 +143,9 @@ jobs:
           key: ${{ runner.os }}-cargo-clippy-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-clippy-
 
-      - name: Install LLVM (Ubuntu)
+      - name: Install system deps (Ubuntu)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y libclang-dev
+        run: sudo apt-get install -y libclang-dev liburing-dev
 
       - name: Install LLVM (macOS)
         if: runner.os == 'macOS'
