@@ -921,19 +921,17 @@ pub struct Config {
 	/// Enable journald logging on Linux
 	///
 	/// When enabled, log output will be sent to the systemd journal
-	/// This is only supported on Linux
+	/// This is only supported on Linux and ignored on other platforms
 	///
 	/// default: false
-	#[cfg(target_os = "linux")]
 	#[serde(default)]
 	pub log_to_journald: bool,
 
 	/// The syslog identifier to use with journald logging
 	///
-	/// Only used when journald logging is enabled
+	/// Only used when journald logging is enabled on Linux
 	///
 	/// Defaults to the binary name
-	#[cfg(target_os = "linux")]
 	pub journald_identifier: Option<String>,
 
 	/// OpenID token expiration/TTL in seconds.
